@@ -29,6 +29,6 @@ struct StatCard: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
-        .background(Color.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 24)) // card shape, glass comes later
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 24)) // plain Liquid Glass card, no tint
     }
 }

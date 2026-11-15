@@ -15,17 +15,17 @@ struct DayCircle: View {
 
     private var textColor: Color {
         switch status {
-        case .learned: return .orange
-        case .frozen: return .cyan
+        case .learned: return .appOrange
+        case .frozen: return .appBlue
         case .none: return .white
         }
     }
 
     private var circleColor: Color {
         switch status {
-        case .learned: return Color.orange.opacity(0.2) // dim orange from the design
-        case .frozen: return Color.cyan.opacity(0.2)
-        case .none: return isToday ? .orange : .clear
+        case .learned: return Color.appOrange.opacity(0.2) // dim orange from the design
+        case .frozen: return Color.appBlue.opacity(0.2)
+        case .none: return isToday ? .appOrange : .clear
         }
     }
 

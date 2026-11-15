@@ -35,16 +35,18 @@ struct ActivityView: View {
                     Button { showCalendar = true } label: { // opens the Calendar screen
                         Image(systemName: "calendar")
                             .foregroundStyle(.white)
-                            .frame(width: 44, height: 44)
-                            .background(Color.white.opacity(0.1), in: Circle())
+                            .frame(width: 28, height: 28)
                     }
+                    .buttonStyle(.glass) // real Liquid Glass round button
+                    .buttonBorderShape(.circle)
 
                     Button { showGoalScreen = true } label: { // opens the Learning Goal screen
-                        Image(systemName: "target") // check the exact symbol in the SF Symbols app
+                        Image(systemName: "pencil.and.outline") // check the exact symbol in the SF Symbols app
                             .foregroundStyle(.white)
-                            .frame(width: 44, height: 44)
-                            .background(Color.white.opacity(0.1), in: Circle())
+                            .frame(width: 28, height: 28)
                     }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
                 }
 
                 Text(viewModel.dateText)
@@ -65,9 +67,9 @@ struct ActivityView: View {
 
                 // stat cards
                 HStack(spacing: 12) {
-                    StatCard(symbol: "flame.fill", tint: .orange,
+                    StatCard(symbol: "flame.fill", tint: .appOrange,
                              value: viewModel.countText(viewModel.learnedDates.count), label: "Learned")
-                    StatCard(symbol: "snowflake", tint: .cyan,
+                    StatCard(symbol: "snowflake", tint: .appBlue,
                              value: viewModel.countText(viewModel.frozenDates.count), label: "Freezed")
                 }
 
@@ -114,19 +116,22 @@ struct ActivityView: View {
                     .font(.title3)
                     .bold()
                     .foregroundStyle(viewModel.isLoggedToday ? Color.gray : Color.white)
-                    .frame(width: 280, height: 280)
-                    .background(viewModel.isLoggedToday ? Color.white.opacity(0.1) : Color.orange, in: Circle())
+                    .frame(width: 260, height: 260)
             }
+            .buttonStyle(.glassProminent) // real Liquid Glass, goes dim by itself once disabled
+            .buttonBorderShape(.circle)
+            .tint(Color.appOrange)
             .disabled(!viewModel.canLog)
-
+            .padding(.bottom, 40)
             VStack(spacing: 8) {
                 Button { viewModel.freezeDay() } label: {
                     Text(viewModel.isFrozenToday ? "Freezed for a day" : "Freeze for a day")
                         .foregroundStyle(viewModel.canFreeze ? Color.white : Color.gray)
-                        .padding(.horizontal, 36)
-                        .padding(.vertical, 14)
-                        .background(viewModel.canFreeze ? Color.cyan : Color.white.opacity(0.1), in: Capsule())
+                        .padding(.horizontal, 60)
+                        .padding(.vertical, 4)
                 }
+                .buttonStyle(.glassProminent) // blue glass while available, dim glass when disabled
+                .tint(Color.appBlue)
                 .disabled(!viewModel.canFreeze) // all freezes used, a day logged, or already frozen today
 
                 Text("\(viewModel.freezesUsed) out of \(viewModel.freezeLimit) Freezes used")
@@ -135,13 +140,14 @@ struct ActivityView: View {
             }
         }
         .frame(maxWidth: .infinity)
+        
     }
 
     private func finishedContent(symbol: String, title: String, subtitle: String) -> some View {
         VStack(spacing: 12) { // shared by the completed and failed states, only the texts differ
             Image(systemName: symbol)
                 .font(.system(size: 44))
-                .foregroundStyle(.orange)
+                .foregroundStyle(Color.appOrange)
 
             Text(title)
                 .font(.headline)
@@ -155,10 +161,11 @@ struct ActivityView: View {
             Button { showGoalScreen = true } label: { // opens the Learning Goal screen
                 Text("Set a goal")
                     .foregroundStyle(.white)
-                    .padding(.horizontal, 28)
-                    .padding(.vertical, 12)
-                    .background(Color.orange, in: Capsule())
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 2)
             }
+            .buttonStyle(.glassProminent)
+            .tint(Color.appOrange)
         }
         .frame(maxWidth: .infinity)
     }

@@ -34,9 +34,10 @@ struct LearningGoalView: View {
                         Button { dismiss() } label: {
                             Image(systemName: "chevron.left")
                                 .foregroundStyle(.white)
-                                .frame(width: 44, height: 44)
-                                .background(Color.white.opacity(0.1), in: Circle())
+                                .frame(width: 28, height: 28)
                         }
+                        .buttonStyle(.glass) // real Liquid Glass round button
+                        .buttonBorderShape(.circle)
 
                         Spacer()
 
@@ -49,11 +50,12 @@ struct LearningGoalView: View {
                         } label: {
                             Image(systemName: "checkmark")
                                 .foregroundStyle(.white)
-                                .frame(width: 44, height: 44)
-                                .background(Color.orange, in: Circle())
+                                .frame(width: 28, height: 28)
                         }
+                        .buttonStyle(.glassProminent) // colored glass for the main action
+                        .buttonBorderShape(.circle)
+                        .tint(Color.appOrange)
                         .disabled(!viewModel.canSave)
-                        .opacity(viewModel.canSave ? 1 : 0.4)
                     }
                 }
 

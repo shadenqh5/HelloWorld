@@ -1,11 +1,3 @@
-//
-//  CalendarView.swift
-//  MyApp
-//
-//  Created by Shaden on 15/11/2026.
-//
-
-
 import SwiftUI
 
 struct CalendarView: View {
@@ -34,9 +26,11 @@ struct CalendarView: View {
                         Button { dismiss() } label: {
                             Image(systemName: "chevron.left")
                                 .foregroundStyle(.white)
-                                .frame(width: 44, height: 44)
-                                .background(Color.white.opacity(0.1), in: Circle())
+                                .frame(width: 28, height: 28)
                         }
+                        .buttonStyle(.glass) // real Liquid Glass round button
+                        .buttonBorderShape(.circle)
+
                         Spacer()
                     }
                 }
@@ -89,10 +83,10 @@ struct CalendarView: View {
         let isToday = viewModel.isToday(date)
 
         // same colors as DayCircle: learned is dim orange, frozen is dim blue, today is solid orange
-        let textColor: Color = status == .learned ? .orange : status == .frozen ? .cyan : .white
-        let circleColor: Color = status == .learned ? Color.orange.opacity(0.2)
-            : status == .frozen ? Color.cyan.opacity(0.2)
-            : (isToday ? .orange : .clear)
+        let textColor: Color = status == .learned ? .appOrange : status == .frozen ? .appBlue : .white
+        let circleColor: Color = status == .learned ? Color.appOrange.opacity(0.2)
+            : status == .frozen ? Color.appBlue.opacity(0.2)
+            : (isToday ? .appOrange : .clear)
 
         return Text("\(viewModel.number(for: date))")
             .font(.body)

@@ -48,8 +48,8 @@ class ActivityViewModel: ObservableObject {
 
     func isToday(_ date: Date) -> Bool { date == today }
 
-    func countText(_ count: Int) -> String { // spec: "1" uses "Day", everything else "Days"
-        count == 1 ? "\(count) Day" : "\(count) Days"
+    func countText(_ count: Int) -> String { // spec: "1" uses "day", everything else "days", lowercase like the design
+        count == 1 ? "\(count) day" : "\(count) days"
     }
 
     // MARK: - Button rules
@@ -81,15 +81,38 @@ class ActivityViewModel: ObservableObject {
         checkCompletion()
     }
 
-    func checkStreak() { // call when the screen appears: more than 32 hours without activity resets the streak
-        guard goalStatus == .active else { return }
-        let hours = Date().timeIntervalSince(lastActivity) / 3600
-        if hours > 32 { goalStatus = .failed }
-    }
-
     private func checkCompletion() { // assumption: learned + frozen days reaching the goal length completes it
         if learnedDates.count + frozenDates.count >= goal.duration.days {
             goalStatus = .completed
         }
+    }
+
+    // MARK: - Streak and goal rules
+
+    private var goalEndDate: Date { // the day the goal's time runs out
+        let start = calendar.startOfDay(for: goal.startDate)
+        return calendar.date(byAdding: .day, value: goal.duration.days, to: start) ?? start
+    }
+
+    func checkStreak() { // call when the screen appears
+        guard goalStatus == .active else { return }
+        if Date() >= goalEndDate { // time ran out before the goal was completed
+            goalStatus = .failed
+            return
+        }
+        let hours = Date().timeIntervalSince(lastActivity) / 3600
+        if hours > 32 { resetStreak() } // spec: more than 32 hours without logging or freezing resets the streak
+    }
+
+    private func resetStreak() { // assumption: a reset clears learned and frozen days
+        learnedDates.removeAll()
+        frozenDates.removeAll()
+        lastActivity = Date()
+    }
+
+    func updateGoal(subject: String, duration: LearningDuration) { // spec: updating the goal resets the streak
+        goal = LearningGoal(subject: subject, duration: duration) // new goal, new start date
+        resetStreak()
+        goalStatus = .active
     }
 }

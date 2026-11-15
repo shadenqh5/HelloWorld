@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ActivityView: View {
     @StateObject private var viewModel: ActivityViewModel // this view owns the ViewModel
+    @State private var showGoalScreen = false // true while the Learning Goal screen is open
+    @State private var showCalendar = false // true while the Calendar screen is open
 
     init(goal: LearningGoal) { // the goal comes from onboarding, so the ViewModel is built here
         _viewModel = StateObject(wrappedValue: ActivityViewModel(goal: goal))
@@ -30,14 +32,14 @@ struct ActivityView: View {
 
                     Spacer()
 
-                    Button { } label: { // calendar screen is added later
+                    Button { showCalendar = true } label: { // opens the Calendar screen
                         Image(systemName: "calendar")
                             .foregroundStyle(.white)
                             .frame(width: 44, height: 44)
                             .background(Color.white.opacity(0.1), in: Circle())
                     }
 
-                    Button { } label: { // learning goal screen is added later
+                    Button { showGoalScreen = true } label: { // opens the Learning Goal screen
                         Image(systemName: "target") // check the exact symbol in the SF Symbols app
                             .foregroundStyle(.white)
                             .frame(width: 44, height: 44)
@@ -91,6 +93,16 @@ struct ActivityView: View {
         }
         .navigationBarBackButtonHidden(true) // no going back to onboarding
         .onAppear { viewModel.checkStreak() } // applies the 32 hour rule
+        .navigationDestination(isPresented: $showGoalScreen) { // pushes the Learning Goal screen
+            LearningGoalView(goal: viewModel.goal) { subject, duration in
+                viewModel.updateGoal(subject: subject, duration: duration) // runs when the user taps Update in the alert
+            }
+        }
+        .navigationDestination(isPresented: $showCalendar) { // pushes the Calendar screen
+            CalendarView(goal: viewModel.goal,
+                         learnedDates: viewModel.learnedDates,
+                         frozenDates: viewModel.frozenDates) // view only, so it just receives the data
+        }
     }
 
     // MARK: - Pieces of the screen
@@ -140,7 +152,7 @@ struct ActivityView: View {
                 .font(.subheadline)
                 .foregroundStyle(.gray)
 
-            Button { } label: { // goal screen is added later
+            Button { showGoalScreen = true } label: { // opens the Learning Goal screen
                 Text("Set a goal")
                     .foregroundStyle(.white)
                     .padding(.horizontal, 28)
